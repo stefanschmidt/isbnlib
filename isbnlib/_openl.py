@@ -25,8 +25,10 @@ def _mapper(isbn, records):
         canonical['ISBN-13'] = isbn
         title = records.get('title', '').replace(' :', ':')
         subtitle = records.get('subtitle', '')
-        title = title + ' - ' + subtitle if subtitle else title
+        title = records.get('title', ('')).replace(' :', ':')
+
         canonical['Title'] = title
+        canonical['Subtitle'] = subtitle
         canonical['Authors'] = [
             a['name'] for a in records.get(
                 'authors',

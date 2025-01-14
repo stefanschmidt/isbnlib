@@ -11,6 +11,7 @@ from ._helpers import last_first
 
 bibtex = r"""@book{$ISBN,
      title = {$Title},
+    series = {$Subtitle},
     author = {$AUTHORS},
       isbn = {$ISBN},
       year = {$Year},
