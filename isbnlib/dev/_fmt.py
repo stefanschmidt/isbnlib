@@ -11,7 +11,7 @@ from ._helpers import last_first
 
 bibtex = r"""@book{$ISBN,
      title = {$Title},
-    series = {$Subtitle},
+    $Subtitle
     author = {$AUTHORS},
       isbn = {$ISBN},
       year = {$Year},
@@ -104,10 +104,23 @@ def _gen_proc(name, canonical):
     if 'ISBN-13' in canonical:
         canonical['ISBN'] = canonical.pop('ISBN-13')
     canonical['Title'] = canonical.get('Title').replace('"', '')
+    
+    # Handle subtitle
+    subtitle = canonical.get('Subtitle', '').strip()
+    if subtitle:
+        canonical['Subtitle'] = f"series = {{{subtitle}}},"
+    else:
+        # Remove the subtitle part completely
+        canonical['Subtitle'] = ''
+    
     tpl = templates[name]
-    return Template(tpl).safe_substitute(canonical)
+    result = Template(tpl).safe_substitute(canonical)
 
-
+    # Remove empty lines
+    result = re.sub(r'\n\s*\n', '\n', result)
+    
+    return result    
+    return result
 def _spec_proc(name, fmtrec, authors):
     """Fix the Authors records."""
     if name not in _fmts:
