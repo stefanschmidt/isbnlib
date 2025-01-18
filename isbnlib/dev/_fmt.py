@@ -108,7 +108,8 @@ def _gen_proc(name, canonical):
     # Handle subtitle
     subtitle = canonical.get('Subtitle', '').strip()
     if subtitle:
-        canonical['Subtitle'] = f"series = {{{subtitle}}},"
+        if not re.match(r"series = \{.*\}", subtitle):
+            canonical['Subtitle'] = f"series = {{{subtitle}}},"
     else:
         # Remove the subtitle part completely
         canonical['Subtitle'] = ''
