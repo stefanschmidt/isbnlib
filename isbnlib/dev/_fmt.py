@@ -14,6 +14,7 @@ bibtex = r"""@book{$ISBN,
     $Subtitle
     author = {$AUTHORS},
       isbn = {$ISBN},
+       $MD5
       year = {$Year},
  publisher = {$Publisher}
 }"""
@@ -114,6 +115,13 @@ def _gen_proc(name, canonical):
         # Remove the subtitle part completely
         canonical['Subtitle'] = ''
     
+    # Handle MD5
+    md5 = canonical.get('MD5', '').strip()
+    if md5:
+        canonical['MD5'] = f"md5 = {{{md5}}},"
+    else:
+        canonical['MD5'] = ''
+    
     tpl = templates[name]
     result = Template(tpl).safe_substitute(canonical)
 
@@ -121,7 +129,7 @@ def _gen_proc(name, canonical):
     result = re.sub(r'\n\s*\n', '\n', result)
     
     return result    
-    return result
+
 def _spec_proc(name, fmtrec, authors):
     """Fix the Authors records."""
     if name not in _fmts:
