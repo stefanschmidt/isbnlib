@@ -15,6 +15,7 @@ bibtex = r"""@book{$ISBN,
     author = {$AUTHORS},
       isbn = {$ISBN},
        $MD5
+       $DOI
       year = {$Year},
  publisher = {$Publisher}
 }"""
@@ -121,6 +122,13 @@ def _gen_proc(name, canonical):
         canonical['MD5'] = f"md5 = {{{md5}}},"
     else:
         canonical['MD5'] = ''
+    
+    # Handle DOI
+    doi = canonical.get('DOI', '').strip()
+    if doi:
+        canonical['DOI'] = f"doi = {{{doi}}},"
+    else:
+        canonical['DOI'] = ''
     
     tpl = templates[name]
     result = Template(tpl).safe_substitute(canonical)
